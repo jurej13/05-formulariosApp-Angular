@@ -1,6 +1,6 @@
 <h2>Reactive : <small>Dinamicos</small></h2>
 <hr />
-<form autocomplete="off">
+<form autocomplete="off" (ngSubmit)="guardar()" [formGroup]="miFormulario">
   <!-- Nombre -->
   <div class="mb-3 row">
     <label class="col-sm3 col-form-label">Nombre</label>
@@ -8,47 +8,58 @@
       <input
         type="text"
         class="form-control"
+        formControlName="nombre"
         placeholder="Nombre de la persona"
       />
     </div>
-    <span class="form-text text-danger"> Este campo es obligatorio</span>
+    <span class="form-text text-danger" *ngIf="esCampoValido('nombre')"> Este campo es obligatorio</span>
   </div>
   <!-- Agregar favorito -->
   <div class="mb-3 row">
     <label class="col-sm3 col-form-label">Agregar</label>
     <div class="col-sm-9">
       <div class="input-group">
-        <input class="form-control" placeholder="Agregar favorito" />
-        <button class="btn btn-outline-primary" type="button">Agregar</button>
+        <input 
+          class="form-control"
+          placeholder="Agregar favorito"
+          [formControl]="nuevoFavorito"
+          (keyup.enter)="agregarFavorito()"  
+        />
+        <button class="btn btn-outline-primary" type="button" (click)="agregarFavorito()">Agregar</button>
       </div>
     </div>
   </div>
   <!-- Lista de juegos favoritos -->
   <div class="mb-3 row">
     <label class="col-sm3 col-form-label">Favoritos</label>
-    <div class="col-sm-9">
-      <!-- <div class="input-group mb-1" *ngFor="let juego of persona.favoritos;let i = index">
+    <div class="col-sm-9" formArrayName="favoritos">
+      <div class="input-group mb-1" 
+        *ngFor="let favorito of favoritosArr.controls ; let i = index"
+      >
                 <input
-                    
-                    [(ngModel)]="juego.nombre"
-                    name="favorito_{{i}}" 
                     class="form-control"
-                    required    
+                    [formControlName]="i"    
                 >
                 <button class="btn btn-outline-danger"
                     type="button"
-                    (click)="eliminar(i)"
+                    (click)="borrar(i)"
                     >
                     Eliminar
                 </button>
-            </div> -->
+            </div>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-9">
-      <button type="button" class="btn btn-primary float-end">Guardar</button>
+      <button type="submit" class="btn btn-primary float-end">Guardar</button>
     </div>
   </div>
 </form>
-<!-- <span>Persona</span>
-<pre>{{persona | json}}</pre> -->
+<span>Valid</span>
+<pre>{{miFormulario.valid}}</pre>
+<br>
+<span>Value</span>
+<pre>{{miFormulario.value | json}}</pre>
+<br>
+
+
